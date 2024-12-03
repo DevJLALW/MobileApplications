@@ -5,18 +5,18 @@ import androidx.compose.runtime.*
 
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-import org.srh.helloworld.controller.AppController
+
 import org.srh.helloworld.view.SharedAppView
+import org.srh.helloworld.viewmodel.MainViewModel
 
 @Composable
 @Preview
 fun App() {
 
-    // Initialize the controller for this screen
-    val controller = remember { AppController() }
 
     // Pass the controller to the shared view
-    SharedAppView(controller)
+    SharedAppView(viewModel = MainViewModel())
+
 //    MaterialTheme {
 //        var showContent by remember { mutableStateOf(false) }
 //        Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {

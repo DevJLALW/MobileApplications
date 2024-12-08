@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">FoodDeliveryApp</string>
+    <string name="intro_title">
+        Welcome to <font color="#39c7a5">Food Delivery App</font>\n
+        Your <font color="#39c7a5">Gateway</font> to delicious meals at your fingertips
+    </string>
+    <string name="intro_sub_title">
+        Sign in to explore a world of flavors, fast delivery, and exclusive offers
+    </string>
 </resources>

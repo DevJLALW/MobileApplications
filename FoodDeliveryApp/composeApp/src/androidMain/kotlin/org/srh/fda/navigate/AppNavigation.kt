@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import database.UsersViewModel
+import org.srh.fda.view.IntroScreen
 import org.srh.fda.view.LoginScreen
 import org.srh.fda.view.MainScreen
 import org.srh.fda.view.RegisterScreen
@@ -16,7 +17,7 @@ fun AppNavigation(viewModel: UsersViewModel) {
 
     NavHost(navController = navController, startDestination = "main") {
         composable("main") {
-            MainScreen(navController = navController)
+            IntroScreen(navController = navController)
         }
         composable("login") {
             LoginScreen(viewModel = viewModel)

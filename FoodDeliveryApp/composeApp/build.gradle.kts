@@ -85,6 +85,7 @@ room {
 dependencies {
 
 
+    implementation(libs.androidx.appcompat)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.common)
     ksp(libs.room.compiler)

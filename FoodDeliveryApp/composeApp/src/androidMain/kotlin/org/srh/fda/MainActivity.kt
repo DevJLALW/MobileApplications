@@ -7,7 +7,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import database.Users
 import database.UsersViewModel
-import org.srh.fda.view.LoginScreen
+import org.srh.fda.navigate.AppNavigation
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -15,7 +16,8 @@ class MainActivity : ComponentActivity() {
 
         val viewModel = UsersViewModel(this)
         setContent {
-            LoginScreen(viewModel = viewModel)
+            AppNavigation(viewModel = viewModel)
+
         }
     }
 }

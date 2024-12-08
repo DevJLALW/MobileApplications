@@ -19,6 +19,12 @@ ksp = "2.0.21-1.0.27"
 sqlite = "2.4.0"
 roomCommon = "2.6.1"
 roomKtx = "2.6.1"
+androidx-navigation = "2.8.4"
+camera-core = "1.5.0-alpha03"
+camera-camera2 = "1.5.0-alpha03"
+camera-lifecycle = "1.5.0-alpha03"
+camera-view = "1.5.0-alpha03"
+coil-compose = "3.0.4"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -39,6 +45,12 @@ room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 androidx-room-common = { group = "androidx.room", name = "room-common", version.ref = "roomCommon" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidx-navigation" }
+androidx-camera-core = { group = "androidx.camera", name = "camera-core", version.ref = "camera-core" }
+androidx-camera-camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "camera-camera2" }
+androidx-camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "camera-lifecycle" }
+androidx-camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "camera-view" }
+coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil-compose" }
 
 
 [plugins]

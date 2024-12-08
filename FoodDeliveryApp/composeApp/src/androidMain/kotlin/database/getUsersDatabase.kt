@@ -11,6 +11,6 @@ fun getUsersDatabase(context: Context?): UsersDatabase {
     val dbFile = context.getDatabasePath("users.db")
     Log.d("DatabasePath", "Database file path: ${dbFile.absolutePath}")
     return Room.databaseBuilder<UsersDatabase>(context = context.applicationContext,UsersDatabase::class.java,name=dbFile.absolutePath)
-        // .setDriver(BundledSQLiteDriver())
+        .addMigrations(MIGRATION_1_2)
         .build()
 }

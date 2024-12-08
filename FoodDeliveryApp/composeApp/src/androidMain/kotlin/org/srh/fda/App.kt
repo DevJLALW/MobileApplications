@@ -16,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import database.UsersViewModel
 
 
+
 @Composable
 fun app(viewModel: UsersViewModel) {
     MaterialTheme {
@@ -42,7 +43,14 @@ fun app(viewModel: UsersViewModel) {
 @Preview
 @Composable
 fun appPreview(){
-    app(viewModel = UsersViewModel(
-        context = TODO()
-    ))
+    val fakeViewModel = object : UsersViewModel(null) {
+        override fun authenticateUser(username: String, password: String, callback: (Boolean) -> Unit) {
+            callback(username == "John" && password == "Password1")
+        }
+
+        override fun addSampleUsers() {
+            // No-op for the fake implementation
+        }
+    }
+    app(viewModel = fakeViewModel)
 }

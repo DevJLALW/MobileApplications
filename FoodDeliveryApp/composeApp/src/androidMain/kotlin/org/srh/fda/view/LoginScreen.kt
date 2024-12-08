@@ -13,11 +13,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.tooling.preview.Preview
 import database.UsersViewModel
 
 
 @Composable
 fun LoginScreen(viewModel: UsersViewModel) {
+
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var loginMessage by remember { mutableStateOf("") }
@@ -50,6 +52,24 @@ fun LoginScreen(viewModel: UsersViewModel) {
             if (loginMessage.isNotEmpty()) {
                 Text(text = loginMessage)
             }
+
+            Text("Check")
         }
     }
+}
+
+@Preview
+@Composable
+fun loginScreenPreview()
+{
+    val fakeViewModel = object : UsersViewModel(null) {
+        override fun authenticateUser(username: String, password: String, callback: (Boolean) -> Unit) {
+            callback(username == "John" && password == "Password1")
+        }
+
+        override fun addSampleUsers() {
+            // No-op for the fake implementation
+        }
+    }
+    LoginScreen(viewModel = fakeViewModel)
 }

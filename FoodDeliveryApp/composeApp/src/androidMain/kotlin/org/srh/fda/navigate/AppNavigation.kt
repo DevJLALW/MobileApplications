@@ -9,6 +9,7 @@ import database.UsersViewModel
 import org.srh.fda.view.IntroScreen
 import org.srh.fda.view.LoginScreen
 import org.srh.fda.view.MainScreen
+import org.srh.fda.view.ProfileScreen
 import org.srh.fda.view.RegisterScreen
 
 @Composable
@@ -20,13 +21,17 @@ fun AppNavigation(viewModel: UsersViewModel) {
             IntroScreen(navController = navController)
         }
         composable("login") {
-            LoginScreen(viewModel = viewModel)
+            LoginScreen(viewModel = viewModel, onLoginComplete = {
+                navController.navigate("profile")
+            })
         }
         composable("register") {
-            RegisterScreen(
-                viewModel = viewModel,
-                onRegisterComplete = { navController.popBackStack() }
-            )
+            RegisterScreen(viewModel = viewModel, onRegisterComplete = {
+                navController.navigate("profile")
+            })
+        }
+        composable("profile") {
+            ProfileScreen(viewModel = viewModel, navController = navController)
         }
     }
 }

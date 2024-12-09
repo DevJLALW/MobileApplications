@@ -18,7 +18,7 @@ import database.UsersViewModel
 
 
 @Composable
-fun LoginScreen(viewModel: UsersViewModel) {
+fun LoginScreen(viewModel: UsersViewModel, onLoginComplete: () -> Unit) {
 
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -43,7 +43,12 @@ fun LoginScreen(viewModel: UsersViewModel) {
 
             Button(onClick = {
                 viewModel.authenticateUser(username, password) { success ->
-                    loginMessage = if (success) "Login Successful" else "Invalid Credentials"
+                    if (success) {
+                        loginMessage = "Login Successful"
+                        onLoginComplete()  // Navigate to ProfileScreen
+                    } else {
+                        loginMessage = "Invalid Credentials"
+                    }
                 }
             }) {
                 Text("Login")
@@ -53,7 +58,7 @@ fun LoginScreen(viewModel: UsersViewModel) {
                 Text(text = loginMessage)
             }
 
-            Text("Check")
+
         }
     }
 }
@@ -71,5 +76,5 @@ fun loginScreenPreview()
             // No-op for the fake implementation
         }
     }
-    LoginScreen(viewModel = fakeViewModel)
+    //LoginScreen(viewModel = fakeViewModel)
 }

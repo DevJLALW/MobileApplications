@@ -1,8 +1,11 @@
 package org.srh.fda.view
 
+import android.app.LocaleManager
 import android.content.Context
 import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
+import android.os.LocaleList
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
@@ -12,8 +15,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.*
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,25 +27,24 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import org.srh.fda.R // Ensure this import matches your package
 import java.util.*
-import androidx.compose.material.Icon
-import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.os.LocaleListCompat
 
-class IntroActivity : BaseActivity() {
-
-    override fun attachBaseContext(newBase: Context?) {
-        // Use saved language or fallback to system language
-        val savedLanguage = getSavedLanguage(newBase ?: return)
-        super.attachBaseContext(setLocale(newBase, savedLanguage))
-    }
+class IntroActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Retrieve saved language preference and set it
+        val savedLanguage = getSavedLanguage(this) ?: "en"
+        setLanguage(this, savedLanguage)
+
         setContent {
             val navController = rememberNavController()
             IntroScreen(navController)
@@ -52,7 +54,6 @@ class IntroActivity : BaseActivity() {
 
 @Composable
 fun IntroScreen(navController: NavController) {
-
     var expanded by remember { mutableStateOf(false) }
     var selectedLanguage by remember { mutableStateOf("English") }
     val context = LocalContext.current
@@ -60,7 +61,7 @@ fun IntroScreen(navController: NavController) {
     MaterialTheme {
         Box(
             modifier = Modifier.fillMaxSize()
-        ){
+        ) {
             Image(
                 painter = painterResource(R.drawable.backgroundimg),
                 contentDescription = "Background image",
@@ -75,7 +76,6 @@ fun IntroScreen(navController: NavController) {
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-
                 // Language Dropdown
                 Box(modifier = Modifier.wrapContentSize(Alignment.TopStart)) {
                     TextButton(onClick = { expanded = true }) {
@@ -88,15 +88,16 @@ fun IntroScreen(navController: NavController) {
                                 imageVector = Icons.Default.ArrowDropDown,
                                 contentDescription = "Dropdown arrow"
                             )
-
                         }
                     }
+
+                    // Dropdown Menu for selecting languages
                     DropdownMenu(
                         expanded = expanded,
                         onDismissRequest = { expanded = false }
                     ) {
                         DropdownMenuItem(onClick = {
-                            setLocale(context, "en")
+                            setLanguage(context, "en")
                             saveLanguagePreference(context, "en")
                             selectedLanguage = "English"
                             expanded = false
@@ -106,7 +107,7 @@ fun IntroScreen(navController: NavController) {
                         }
 
                         DropdownMenuItem(onClick = {
-                            setLocale(context, "de")
+                            setLanguage(context, "de")
                             saveLanguagePreference(context, "de")
                             selectedLanguage = "Deutsch"
                             expanded = false
@@ -114,9 +115,10 @@ fun IntroScreen(navController: NavController) {
                         }) {
                             Text("Deutsch")
                         }
+
+
                     }
                 }
-
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -129,16 +131,21 @@ fun IntroScreen(navController: NavController) {
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                Text(text= stringResource(id=R.string.intro_title),
+                Text(
+                    text = stringResource(id = R.string.intro_title),
                     fontSize = 26.sp,
                     fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center,)
+                    textAlign = TextAlign.Center,
+                )
+
                 Spacer(modifier = Modifier.height(32.dp))
 
-                Text(text= stringResource(id=R.string.intro_sub_title),
+                Text(
+                    text = stringResource(id = R.string.intro_sub_title),
                     color = Color.Gray,
                     textAlign = TextAlign.Center,
-                    lineHeight = 24.sp)
+                    lineHeight = 24.sp
+                )
 
                 Button(
                     modifier = Modifier.padding(16.dp),
@@ -153,31 +160,24 @@ fun IntroScreen(navController: NavController) {
                 ) {
                     Text("Register")
                 }
-
-
             }
         }
-
-}}
-
-fun setLocale(context: Context, language: String): Context {
-    val locale = Locale(language)
-    Locale.setDefault(locale)
-    val resources = context.resources
-    val config = Configuration(resources.configuration)
-    config.setLocale(locale)
-
-    // For Android 7.0+ (Nougat) and above
-    context.createConfigurationContext(config)
-
-    resources.updateConfiguration(config, resources.displayMetrics)
-    return context
+    }
 }
 
+fun setLanguage(context: Context, languageCode: String) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        context.getSystemService(LocaleManager::class.java)
+            .applicationLocales = LocaleList.forLanguageTags(languageCode)
+    } else {
+        AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(languageCode))
+    }
+    saveLanguagePreference(context, languageCode)
+}
 
-fun saveLanguagePreference(context: Context, language: String) {
-    val sharedPref = context.getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
-    sharedPref.edit().putString("selected_language", language).apply()
+fun saveLanguagePreference(context: Context, languageCode: String) {
+    val pref = context.getSharedPreferences("language_prefs", Context.MODE_PRIVATE)
+    pref.edit().putString("language", languageCode).apply()
 }
 
 /**
@@ -185,14 +185,13 @@ fun saveLanguagePreference(context: Context, language: String) {
  * Defaults to system language if no preference is saved.
  */
 fun getSavedLanguage(context: Context): String {
-    val sharedPref = context.getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
-    return sharedPref.getString("selected_language", Locale.getDefault().language) ?: "en"
+    val sharedPref = context.getSharedPreferences("language_prefs", Context.MODE_PRIVATE)
+    return sharedPref.getString("language", Locale.getDefault().language) ?: "en"
 }
-
 
 @Preview
 @Composable
 fun introScreenPreview() {
     val navController = rememberNavController()
-    MainScreen(navController = navController)
+    IntroScreen(navController)
 }

@@ -17,7 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil3.compose.rememberAsyncImagePainter
-import database.UsersViewModel
+import org.srh.fda.viewmodel.UsersViewModel
 import org.srh.fda.R
 
 @Composable

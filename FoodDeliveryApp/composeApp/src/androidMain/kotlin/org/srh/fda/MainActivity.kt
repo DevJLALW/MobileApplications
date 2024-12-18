@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
 import database.Users
-import database.UsersViewModel
+import org.srh.fda.viewmodel.UsersViewModel
 import org.srh.fda.navigate.AppNavigation
 import org.srh.fda.theme.AppTheme
 

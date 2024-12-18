@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import database.UsersViewModel
+import org.srh.fda.viewmodel.UsersViewModel
 import org.srh.fda.OrderPage
 import org.srh.fda.view.*
 

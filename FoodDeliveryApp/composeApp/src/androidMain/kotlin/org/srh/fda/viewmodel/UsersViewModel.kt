@@ -1,22 +1,18 @@
-package database
+package org.srh.fda.viewmodel
 
-import android.R.attr.bitmap
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
-
 import android.net.Uri
-
+import android.provider.MediaStore
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import database.Users
+import database.UsersDao
+import database.getUsersDatabase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-
-import android.content.ContentValues
-
-import android.provider.MediaStore
-
-
 import java.io.OutputStream
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -93,6 +89,10 @@ open class UsersViewModel(private val context: Context?) : ViewModel() {
             callback(true) // Indicate success
         }
     }
+    fun isPasswordValid(password: String): Boolean {
+        val passwordPattern = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@#\$%^&+=!]).{8,}$"
+        return Regex(passwordPattern).matches(password)
+    }
 
 
     open fun addSampleUsers() {
@@ -104,6 +104,13 @@ open class UsersViewModel(private val context: Context?) : ViewModel() {
             sampleUsers.forEach { user ->
                 usersDao.upsert(user)
             }
+        }
+    }
+
+    fun checkUsernameExists(username: String, callback: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            val user = usersDao.getUserByUsername(username)
+            callback(user != null)
         }
     }
 }

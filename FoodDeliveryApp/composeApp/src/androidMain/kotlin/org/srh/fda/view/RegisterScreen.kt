@@ -3,6 +3,7 @@ package org.srh.fda.view
 import android.Manifest
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
@@ -32,7 +33,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import coil3.compose.rememberAsyncImagePainter
-import database.UsersViewModel
+import org.srh.fda.viewmodel.UsersViewModel
 import org.srh.fda.R
 
 
@@ -130,26 +131,39 @@ fun RegisterScreen(viewModel: UsersViewModel, onRegisterComplete: () -> Unit) {
             }
 
 
-            Button(onClick = {
-                if (username.isNotEmpty() && password.isNotEmpty()) {
-                    viewModel.registerUser(username, password, photoBitmap) { success ->
-                        if (success) {
-                            message = "User Registered Successfully"
-                            onRegisterComplete()
-                        } else {
-                            message = "Registration Failed"
-                        }
-                    }
-                } else {
-                    message = "Please fill all fields"
-                }
-            }) {
-                Text("Register")
-            }
+                Button(onClick = {
+                    if (username.isNotEmpty() && password.isNotEmpty()) {
+                        viewModel.checkUsernameExists(username) { exists ->
+                            if (exists) {
+                                Toast.makeText(context, "Username already exists", Toast.LENGTH_SHORT).show()
+                            } else {
 
-            if (message.isNotEmpty()) {
-                Text(text = message)
+                                if (!viewModel.isPasswordValid(password)) {
+                                    message = "Password must be at least 8 characters long, with uppercase, lowercase, digit, and special character"
+                                }
+                                else {
+                                    viewModel.registerUser(username, password, photoBitmap) { success ->
+                                        if (success) {
+                                            message = "User Registered Successfully"
+                                            onRegisterComplete()
+                                        } else {
+                                            message = "Registration Failed"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        message = "Please fill all fields"
+                    }
+                }) {
+                    Text("Register")
+                }
+
+                if (message.isNotEmpty()) {
+                    Text(text = message)
+                }
             }
         }
-    }}
+    }
 }

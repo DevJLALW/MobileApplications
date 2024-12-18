@@ -13,6 +13,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.*
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,6 +31,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import org.srh.fda.R // Ensure this import matches your package
 import java.util.*
+import androidx.compose.material.Icon
+import androidx.compose.material.icons.filled.ArrowDropDown
 
 class IntroActivity : BaseActivity() {
 
@@ -76,7 +79,17 @@ fun IntroScreen(navController: NavController) {
                 // Language Dropdown
                 Box(modifier = Modifier.wrapContentSize(Alignment.TopStart)) {
                     TextButton(onClick = { expanded = true }) {
-                        Text(text = stringResource(id = R.string.language) + ": $selectedLanguage")
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(text = stringResource(id = R.string.language) + ": $selectedLanguage")
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Icon(
+                                imageVector = Icons.Default.ArrowDropDown,
+                                contentDescription = "Dropdown arrow"
+                            )
+
+                        }
                     }
                     DropdownMenu(
                         expanded = expanded,
@@ -95,7 +108,7 @@ fun IntroScreen(navController: NavController) {
                         DropdownMenuItem(onClick = {
                             setLocale(context, "de")
                             saveLanguagePreference(context, "de")
-                            selectedLanguage = "German"
+                            selectedLanguage = "Deutsch"
                             expanded = false
                             (context as? AppCompatActivity)?.recreate()
                         }) {
@@ -157,7 +170,6 @@ fun setLocale(context: Context, language: String): Context {
     // For Android 7.0+ (Nougat) and above
     context.createConfigurationContext(config)
 
-    // Update resources directly for backward compatibility
     resources.updateConfiguration(config, resources.displayMetrics)
     return context
 }

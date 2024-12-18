@@ -145,7 +145,7 @@ private fun Cart(
 ) {
     Surface(
         modifier = modifier.clickable(onClick = onClicked),
-        color = AppTheme.colors.secondarySurface,
+        color = AppTheme.colors.onActionSurface,
         contentColor = AppTheme.colors.onSecondarySurface,
         shape = RoundedCornerShape(20.dp)
     ) {

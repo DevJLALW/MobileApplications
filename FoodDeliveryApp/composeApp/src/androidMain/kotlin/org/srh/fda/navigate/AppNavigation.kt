@@ -70,5 +70,8 @@ fun AppNavigation(viewModel: UsersViewModel) {
         composable("checkout") {
             CheckoutScreen(navController = navController) // Checkout screen
         }
+        composable("maps") {
+            MapScreenDroid(navController = navController)
+        }
     }
 }

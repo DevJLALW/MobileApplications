@@ -1,5 +1,6 @@
 package org.srh.fda.view
 
+import android.speech.tts.TextToSpeech
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -7,18 +8,51 @@ import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import org.srh.fda.R
+import java.util.Locale
 
 @Composable
 fun CheckoutScreen(navController: NavController) {
+
+    val context = LocalContext.current
+    val orderPlacedMessage = stringResource(id=R.string.order_status)
+
+    var tts: TextToSpeech? = null
+
+     tts = remember {
+        TextToSpeech(context) { status ->
+            if (status == TextToSpeech.SUCCESS) {
+                tts?.language = Locale.US
+                tts?.speak(orderPlacedMessage, TextToSpeech.QUEUE_FLUSH, null, null)
+            } else {
+                println("TTS initialization failed")
+            }
+        }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            tts.shutdown()
+        }
+    }
+
+    // Retrieve the location from the saved state handle
+    val selectedLocation = navController.currentBackStackEntry
+        ?.savedStateHandle
+        ?.get<String>("selectedLocation")
     MaterialTheme {
         // Set the background image and cover the entire screen
         Box(
@@ -52,12 +86,20 @@ fun CheckoutScreen(navController: NavController) {
 
                 // Text to confirm the order has been placed
                 Text(
-                    text = "Your Order has been placed",
+                    text = orderPlacedMessage,
                     color = Color.Black, // Text color to contrast the background
                     modifier = Modifier.padding(bottom = 20.dp),
                     style = MaterialTheme.typography.h5
                 )
 
+
+                selectedLocation?.let {
+                    Text(
+                        text = "Selected Location: $it",
+                        color = Color.Black,
+                        modifier = Modifier.padding(bottom = 20.dp)
+                    )
+                }
                 // Button to navigate back to the home screen
                 Button(
                     onClick = {
@@ -71,6 +113,18 @@ fun CheckoutScreen(navController: NavController) {
                 ) {
                     Text("Back to Home", color = Color.White) // Text color for the button
                 }
+
+                Button(
+                    onClick = {
+                        // Navigate back to the main screen
+                        navController.navigate("maps")
+                    },
+                    modifier = Modifier.padding(top = 20.dp)
+                ) {
+                    Text("Check Current Location", color = Color.White) // Text color for the button
+                }
+
+
             }
         }
     }

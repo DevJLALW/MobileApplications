@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">FoodDeliveryApp</string>
+    <string name="intro_title">
+        Willkommen bei
+        <b><font color="#800080">NomNomNow</font></b>
+        Ihr <b><font color="#39c7a5">Tor</font></b> zu köstlichen Mahlzeiten direkt zur Hand
+    </string>
+    <string name="intro_sub_title">
+        Melden Sie sich an, um eine Welt voller Aromen, schneller Lieferung und exklusiver Angebote zu entdecken
+    </string>
+    <string name="language">Deutsch</string>
+</resources>

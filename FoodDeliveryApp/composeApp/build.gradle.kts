@@ -30,6 +30,11 @@ kotlin {
             implementation(libs.androidx.camera.lifecycle)
             implementation(libs.androidx.camera.view)
             implementation(libs.coil.compose)
+            implementation(libs.androidx.activity.compose)
+            implementation(libs.androidx.constraintlayout.compose)
+            implementation(project.dependencies.platform(libs.androidx.compose.bom))
+
+
 
 
 
@@ -85,6 +90,7 @@ room {
 dependencies {
 
 
+    implementation(libs.androidx.material3.android)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.common)

@@ -22,16 +22,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import coil3.compose.rememberAsyncImagePainter
 import database.UsersViewModel
-
-
+import org.srh.fda.R
 
 
 @Composable
@@ -63,20 +65,40 @@ fun RegisterScreen(viewModel: UsersViewModel, onRegisterComplete: () -> Unit) {
 
 
     MaterialTheme {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
+
+        Box(
+            modifier = Modifier.fillMaxSize()
         ) {
+            Image(
+                painter = painterResource(R.drawable.backgroundimg2),
+                contentDescription = "Background image",
+                modifier = Modifier.fillMaxSize(),
+               contentScale = ContentScale.Crop
+            )
+
+
+
+            Column ( modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Spacer(modifier = Modifier.height(200.dp))
+
             OutlinedTextField(
                 value = username,
                 onValueChange = { username = it },
-                label = { Text("Username") }
+                label = { Text("Username") },
+
             )
 
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
                 label = { Text("Password") },
-                visualTransformation = PasswordVisualTransformation()
+                visualTransformation = PasswordVisualTransformation(),
+
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -107,6 +129,7 @@ fun RegisterScreen(viewModel: UsersViewModel, onRegisterComplete: () -> Unit) {
                 )
             }
 
+
             Button(onClick = {
                 if (username.isNotEmpty() && password.isNotEmpty()) {
                     viewModel.registerUser(username, password, photoBitmap) { success ->
@@ -128,5 +151,5 @@ fun RegisterScreen(viewModel: UsersViewModel, onRegisterComplete: () -> Unit) {
                 Text(text = message)
             }
         }
-    }
+    }}
 }

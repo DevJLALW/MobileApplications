@@ -1,7 +1,10 @@
 package org.srh.fda.view
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
@@ -13,8 +16,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import database.UsersViewModel
+import org.srh.fda.R
 
 
 @Composable
@@ -25,9 +33,25 @@ fun LoginScreen(viewModel: UsersViewModel, onLoginComplete: () -> Unit) {
     var loginMessage by remember { mutableStateOf("") }
 
     MaterialTheme {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
+
+        Box(
+            modifier = Modifier.fillMaxSize()
         ) {
+            Image(
+                painter = painterResource(R.drawable.backgroundimg4),
+                contentDescription = "Background image",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )
+
+            Column( modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Spacer(modifier = Modifier.height(200.dp))
+
             OutlinedTextField(
                 value = username,
                 onValueChange = { username = it },
@@ -60,7 +84,7 @@ fun LoginScreen(viewModel: UsersViewModel, onLoginComplete: () -> Unit) {
 
 
         }
-    }
+    }}
 }
 
 @Preview

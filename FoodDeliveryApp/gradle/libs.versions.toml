@@ -25,6 +25,10 @@ camera-camera2 = "1.5.0-alpha03"
 camera-lifecycle = "1.5.0-alpha03"
 camera-view = "1.5.0-alpha03"
 coil-compose = "3.0.4"
+compose-bom = "2024.09.00" # BOM version
+compose-activity = "1.9.2"
+compose-constraint-layout = "1.0.1"
+material3Android = "1.3.1"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -51,7 +55,9 @@ androidx-camera-camera2 = { group = "androidx.camera", name = "camera-camera2", 
 androidx-camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "camera-lifecycle" }
 androidx-camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "camera-view" }
 coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil-compose" }
-
+androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-bom" }
+androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "compose-constraint-layout" }
+androidx-material3-android = { group = "androidx.compose.material3", name = "material3-android", version.ref = "material3Android" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

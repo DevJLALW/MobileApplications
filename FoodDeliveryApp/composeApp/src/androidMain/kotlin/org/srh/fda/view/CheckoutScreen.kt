@@ -19,6 +19,11 @@ import org.srh.fda.R
 
 @Composable
 fun CheckoutScreen(navController: NavController) {
+
+    // Retrieve the location from the saved state handle
+    val selectedLocation = navController.currentBackStackEntry
+        ?.savedStateHandle
+        ?.get<String>("selectedLocation")
     MaterialTheme {
         // Set the background image and cover the entire screen
         Box(
@@ -58,6 +63,13 @@ fun CheckoutScreen(navController: NavController) {
                     style = MaterialTheme.typography.h5
                 )
 
+                selectedLocation?.let {
+                    Text(
+                        text = "Selected Location: $it",
+                        color = Color.Black,
+                        modifier = Modifier.padding(bottom = 20.dp)
+                    )
+                }
                 // Button to navigate back to the home screen
                 Button(
                     onClick = {
@@ -71,6 +83,18 @@ fun CheckoutScreen(navController: NavController) {
                 ) {
                     Text("Back to Home", color = Color.White) // Text color for the button
                 }
+
+                Button(
+                    onClick = {
+                        // Navigate back to the main screen
+                        navController.navigate("maps")
+                    },
+                    modifier = Modifier.padding(top = 20.dp)
+                ) {
+                    Text("Check Current Location", color = Color.White) // Text color for the button
+                }
+
+
             }
         }
     }

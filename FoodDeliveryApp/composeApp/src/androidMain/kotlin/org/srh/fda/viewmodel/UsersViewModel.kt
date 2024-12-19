@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.io.OutputStream
+import java.security.MessageDigest
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -82,9 +83,10 @@ open class UsersViewModel(private val context: Context?) : ViewModel() {
     }
 
     open fun authenticateUser(username: String, password: String, callback: (Boolean) -> Unit) {
+        val hashedPassword = hashPassword(password)
         viewModelScope.launch {
             val user = usersDao.getUserByUsername(username)
-            if (user?.password == password) {
+            if (user?.password == hashedPassword) {
                 setLoggedInUser(user) // Set the logged-in user
                 callback(true)
             } else {
@@ -94,9 +96,10 @@ open class UsersViewModel(private val context: Context?) : ViewModel() {
     }
 
     fun registerUser(username: String, password: String, bitmap: Bitmap?, callback: (Boolean) -> Unit) {
+        val hashedPassword = hashPassword(password)
         viewModelScope.launch {
             val photoUri = bitmap?.let { savePhotoToStorage(it)?.toString() }
-            val user = Users(username = username, password = password, photoUri = photoUri)
+            val user = Users(username = username, password = hashedPassword , photoUri = photoUri)
             usersDao.upsert(user)
             setLoggedInUser(user) // Set the logged-in user
             callback(true) // Indicate success
@@ -125,5 +128,10 @@ open class UsersViewModel(private val context: Context?) : ViewModel() {
             val user = usersDao.getUserByUsername(username)
             callback(user != null)
         }
+    }
+
+    fun hashPassword(password: String): String {
+        val bytes = MessageDigest.getInstance("SHA-256").digest(password.toByteArray())
+        return bytes.joinToString("") { "%02x".format(it) }
     }
 }

@@ -82,6 +82,32 @@ open class UsersViewModel(private val context: Context?) : ViewModel() {
         }
     }
 
+    fun updatePassword(username: String, newPassword: String, callback: (Boolean) -> Unit) {
+        // Validate the new password first (optional)
+        if (!isPasswordValid(newPassword)) {
+            callback(false)
+            return
+        }
+
+        // Hash the new password
+        val hashedPassword = hashPassword(newPassword)
+
+        viewModelScope.launch {
+            // Fetch the existing user by username
+            val user = usersDao.getUserByUsername(username)
+            if (user != null) {
+                // Update only the password
+                val updatedUser = user.copy(password = hashedPassword)
+                usersDao.upsert(updatedUser)
+                setLoggedInUser(updatedUser) // Update the logged-in user
+                callback(true) // Indicate success
+            } else {
+                callback(false) // User not found
+            }
+        }
+    }
+
+
     open fun authenticateUser(username: String, password: String, callback: (Boolean) -> Unit) {
         val hashedPassword = hashPassword(password)
         viewModelScope.launch {

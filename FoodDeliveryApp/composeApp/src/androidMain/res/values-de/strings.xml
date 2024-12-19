@@ -13,6 +13,7 @@
 
     <string name="username">Benutzername</string>
     <string name="password">Passwort</string>
+    <string name="confirm_password">Passwort bestätigen</string>
     <string name="login">Anmelden</string>
     <string name="invalid_credentials">Ungültige Anmeldeinformationen</string>
     <string name="login_successful">Erfolgreich Eingeloggt</string>

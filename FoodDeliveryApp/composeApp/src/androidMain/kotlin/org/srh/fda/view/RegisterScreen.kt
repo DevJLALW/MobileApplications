@@ -109,7 +109,7 @@ fun RegisterScreen(viewModel: UsersViewModel, languageViewModel: LanguageViewMod
                 OutlinedTextField(
                     value = confirmPassword,
                     onValueChange = { confirmPassword = it },
-                    label = { Text("Confirm Password") },
+                    label = { Text(stringResource(id = R.string.confirm_password)) },
                     visualTransformation = PasswordVisualTransformation()
                 )
 

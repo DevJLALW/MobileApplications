@@ -44,31 +44,37 @@ fun CheckoutScreen(viewModel: UsersViewModel, navController: NavController) {
     val context = LocalContext.current
     val orderPlacedMessage = stringResource(id=R.string.order_status)
 
+    val isFirstTime = remember { mutableStateOf(true) }
+
     val scaffoldState = rememberScaffoldState(rememberDrawerState(DrawerValue.Closed))
     val coroutineScope = rememberCoroutineScope() // To launch coroutines for opening the drawer
     var tts: TextToSpeech? = null
-
-     tts = remember {
-        TextToSpeech(context) { status ->
-            if (status == TextToSpeech.SUCCESS) {
-                tts?.language = Locale.US
-                tts?.speak(orderPlacedMessage, TextToSpeech.QUEUE_FLUSH, null, null)
-            } else {
-                println("TTS initialization failed")
-            }
-        }
-    }
-
-    DisposableEffect(Unit) {
-        onDispose {
-            tts.shutdown()
-        }
-    }
 
     // Retrieve the location from the saved state handle
     val selectedLocation = navController.currentBackStackEntry
         ?.savedStateHandle
         ?.get<String>("selectedLocation")
+    if (isFirstTime.value && selectedLocation == null) {
+        tts = remember {
+            TextToSpeech(context) { status ->
+                if (status == TextToSpeech.SUCCESS) {
+                    tts?.language = Locale.US
+                    tts?.speak(orderPlacedMessage, TextToSpeech.QUEUE_FLUSH, null, null)
+                } else {
+                    println("TTS initialization failed")
+                }
+            }
+        }
+        isFirstTime.value = false
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            tts?.shutdown()
+        }
+    }
+
+
 
 
 
@@ -143,7 +149,7 @@ fun CheckoutScreen(viewModel: UsersViewModel, navController: NavController) {
                         Text(
                             text = "Selected Location: $it",
                             color = Color.Black,
-                            modifier = Modifier.padding(bottom = 20.dp)
+                            modifier = Modifier.padding(horizontal = 50.dp,vertical = 20.dp)
                         )
                     }
                     // Button to navigate back to the home screen

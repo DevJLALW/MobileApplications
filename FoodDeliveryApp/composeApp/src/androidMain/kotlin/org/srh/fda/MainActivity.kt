@@ -19,6 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.navigation.NavController
 import org.srh.fda.model.OrderState
 import org.srh.fda.view.ProductDetailsScreen
+import org.srh.fda.viewmodel.LanguageViewModel
 
 private const val PRODUCT_PRICE_PER_UNIT = 5.25
 private const val PRODUCT_CURRENCY = "€"
@@ -28,10 +29,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val viewModel = UsersViewModel(this)
+        val languageViewModel = LanguageViewModel()
         setContent {
            // AppNavigation(viewModel = viewModel)
             AppTheme {
-                AppNavigation(viewModel = viewModel)
+                AppNavigation(viewModel = viewModel, languageViewModel = languageViewModel)
 
             }
 

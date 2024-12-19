@@ -9,5 +9,20 @@
         Melden Sie sich an, um eine Welt voller Aromen, schneller Lieferung und exklusiver Angebote zu entdecken
     </string>
     <string name="language">Sprache</string>
-    <string name="order_status">Your Order has been placed</string>
+    <string name="order_status">Ihre Bestellung wurde aufgegeben</string>
+
+    <string name="username">Benutzername</string>
+    <string name="password">Passwort</string>
+    <string name="login">Anmelden</string>
+    <string name="invalid_credentials">Ungültige Anmeldeinformationen</string>
+    <string name="login_successful">Erfolgreich Eingeloggt</string>
+
+    <string name="register">Registrieren</string>
+    <string name="fill_details">Bitte geben Sie alle Details ein </string>
+
+    <string name="capture_photo">Foto aufnehmen</string>
+    <string name="registration_successful">Benutzer erfolgreich registriert</string>
+    <string name="registration_failed">Registrierung fehlgeschlagen</string>
+    <string name="fill_fields">Bitte füllen Sie alle Felder aus</string>
+
 </resources>

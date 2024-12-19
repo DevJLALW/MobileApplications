@@ -36,8 +36,14 @@ import java.util.*
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.os.LocaleListCompat
+import org.srh.fda.viewmodel.LanguageViewModel
 
 class IntroActivity : AppCompatActivity() {
+    override fun attachBaseContext(newBase: Context?) {
+        // Use saved language or fallback to system language
+        val savedLanguage = getSavedLanguage(newBase ?: return)
+        super.attachBaseContext(setLocale(newBase, savedLanguage))
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -47,13 +53,14 @@ class IntroActivity : AppCompatActivity() {
 
         setContent {
             val navController = rememberNavController()
-            IntroScreen(navController)
+            val languageViewModel = LanguageViewModel()
+            IntroScreen(navController, languageViewModel = languageViewModel)
         }
     }
 }
 
 @Composable
-fun IntroScreen(navController: NavController) {
+fun IntroScreen(navController: NavController, languageViewModel: LanguageViewModel) {
     var expanded by remember { mutableStateOf(false) }
     var selectedLanguage by remember { mutableStateOf("English") }
     val context = LocalContext.current
@@ -99,6 +106,7 @@ fun IntroScreen(navController: NavController) {
                         DropdownMenuItem(onClick = {
                             setLanguage(context, "en")
                             saveLanguagePreference(context, "en")
+                            languageViewModel.setLanguage("en")
                             selectedLanguage = "English"
                             expanded = false
                             (context as? AppCompatActivity)?.recreate()
@@ -109,6 +117,7 @@ fun IntroScreen(navController: NavController) {
                         DropdownMenuItem(onClick = {
                             setLanguage(context, "de")
                             saveLanguagePreference(context, "de")
+                            languageViewModel.setLanguage("de")
                             selectedLanguage = "Deutsch"
                             expanded = false
                             (context as? AppCompatActivity)?.recreate()
@@ -151,14 +160,14 @@ fun IntroScreen(navController: NavController) {
                     modifier = Modifier.padding(16.dp),
                     onClick = { navController.navigate("login") }
                 ) {
-                    Text("Login")
+                    Text(text = stringResource(id = R.string.login))
                 }
 
                 Button(
                     modifier = Modifier.padding(16.dp),
                     onClick = { navController.navigate("register") }
                 ) {
-                    Text("Register")
+                    Text(text = stringResource(id = R.string.register))
                 }
             }
         }
@@ -189,9 +198,24 @@ fun getSavedLanguage(context: Context): String {
     return sharedPref.getString("language", Locale.getDefault().language) ?: "en"
 }
 
-@Preview
-@Composable
-fun introScreenPreview() {
-    val navController = rememberNavController()
-    IntroScreen(navController)
+fun setLocale(context: Context, language: String): Context {
+    val locale = Locale(language)
+    Locale.setDefault(locale)
+    val resources = context.resources
+    val config = Configuration(resources.configuration)
+    config.setLocale(locale)
+
+    // For Android 7.0+ (Nougat) and above
+    context.createConfigurationContext(config)
+
+    resources.updateConfiguration(config, resources.displayMetrics)
+    return context
 }
+
+
+//@Preview
+//@Composable
+//fun introScreenPreview() {
+//    val navController = rememberNavController()
+//    IntroScreen(navController)
+//}

@@ -8,22 +8,23 @@ import androidx.navigation.compose.rememberNavController
 import org.srh.fda.viewmodel.UsersViewModel
 import org.srh.fda.OrderPage
 import org.srh.fda.view.*
+import org.srh.fda.viewmodel.LanguageViewModel
 
 @Composable
-fun AppNavigation(viewModel: UsersViewModel) {
+fun AppNavigation(viewModel: UsersViewModel, languageViewModel: LanguageViewModel) {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = "main") {
         composable("main") {
-            IntroScreen(navController = navController)
+            IntroScreen(navController = navController, languageViewModel = languageViewModel)
         }
         composable("login") {
-            LoginScreen(viewModel = viewModel, onLoginComplete = {
+            LoginScreen(viewModel = viewModel,languageViewModel = languageViewModel, onLoginComplete = {
                 navController.navigate("products")
             })
         }
         composable("register") {
-            RegisterScreen(viewModel = viewModel, onRegisterComplete = {
+            RegisterScreen(viewModel = viewModel,languageViewModel = languageViewModel, onRegisterComplete = {
                 navController.navigate("products")
             })
         }

@@ -29,21 +29,24 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import coil3.compose.rememberAsyncImagePainter
 import org.srh.fda.viewmodel.UsersViewModel
 import org.srh.fda.R
+import org.srh.fda.viewmodel.LanguageViewModel
 
 
 @Composable
-fun RegisterScreen(viewModel: UsersViewModel, onRegisterComplete: (String) -> Unit) {
+fun RegisterScreen(viewModel: UsersViewModel, languageViewModel: LanguageViewModel, onRegisterComplete: (String) -> Unit) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var message by remember { mutableStateOf("") }
     var photoUri by remember {mutableStateOf<Uri?>(null)}
     var confirmPassword by remember { mutableStateOf("") }
+    val currentLanguage = languageViewModel.selectedLanguage.collectAsState().value
 
     val context = LocalContext.current
     val photoBitmap by viewModel.photoBitmap.collectAsState()
@@ -91,14 +94,14 @@ fun RegisterScreen(viewModel: UsersViewModel, onRegisterComplete: (String) -> Un
             OutlinedTextField(
                 value = username,
                 onValueChange = { username = it },
-                label = { Text("Username") },
+                label = { Text(stringResource(id = R.string.username)) }
 
             )
 
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("Password") },
+                label = { Text(stringResource(id = R.string.password)) },
                 visualTransformation = PasswordVisualTransformation(),
 
             )
@@ -123,7 +126,7 @@ fun RegisterScreen(viewModel: UsersViewModel, onRegisterComplete: (String) -> Un
                     }
                 }
             }) {
-                Text("Capture Photo")
+                Text(stringResource(id=R.string.capture_photo))
             }
 
 
@@ -167,7 +170,7 @@ fun RegisterScreen(viewModel: UsersViewModel, onRegisterComplete: (String) -> Un
                         message = "Please fill all fields"
                     }
                 }) {
-                    Text("Register")
+                    Text(text = stringResource(id = R.string.register))
                 }
 
                 if (message.isNotEmpty()) {

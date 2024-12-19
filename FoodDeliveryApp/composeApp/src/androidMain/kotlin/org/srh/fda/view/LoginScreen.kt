@@ -23,14 +23,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.srh.fda.viewmodel.UsersViewModel
 import org.srh.fda.R
+import org.srh.fda.viewmodel.LanguageViewModel
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.res.stringResource
 
 
 @Composable
-fun LoginScreen(viewModel: UsersViewModel, onLoginComplete: (String) -> Unit) {
+fun LoginScreen(viewModel: UsersViewModel, languageViewModel: LanguageViewModel, onLoginComplete: (String) -> Unit) {
 
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var loginMessage by remember { mutableStateOf("") }
+    val currentLanguage = languageViewModel.selectedLanguage.collectAsState().value
 
     MaterialTheme {
 
@@ -55,27 +59,27 @@ fun LoginScreen(viewModel: UsersViewModel, onLoginComplete: (String) -> Unit) {
             OutlinedTextField(
                 value = username,
                 onValueChange = { username = it },
-                label = { Text("Username") }
+                label = { Text(stringResource(id = R.string.username)) }
             )
 
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("Password") },
+                label = { Text(stringResource(id = R.string.password)) },
                 visualTransformation = PasswordVisualTransformation()
             )
 
             Button(onClick = {
                 viewModel.authenticateUser(username, password) { success ->
                     if (success) {
-                        loginMessage = "Login Successful"
+                        loginMessage = if (currentLanguage == "en") "Login Successful" else "Erfolgreich Eingeloggt"
                         onLoginComplete(username)  // Navigate to ProfileScreen
                     } else {
-                        loginMessage = "Invalid Credentials"
+                        loginMessage = if (currentLanguage == "en") "Invalid Credentials" else "Ungültige Anmeldeinformationen"
                     }
                 }
             }) {
-                Text("Login")
+                Text(text = stringResource(id = R.string.login))
             }
 
             if (loginMessage.isNotEmpty()) {

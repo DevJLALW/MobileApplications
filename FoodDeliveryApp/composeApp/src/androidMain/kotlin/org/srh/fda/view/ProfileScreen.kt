@@ -24,12 +24,13 @@ import org.srh.fda.R
 fun ProfileScreen(viewModel: UsersViewModel, navController: NavController) {
     val user by viewModel.users.collectAsState()
     val context = LocalContext.current
-    val latestUser = user.lastOrNull() // Fetch the most recently added user
+    //val latestUser = user.lastOrNull() // Fetch the most recently added user
+    val loggedInUser by viewModel.loggedInUser.collectAsState()
 
     var imagePath by remember { mutableStateOf<String?>(null) }
 
-    LaunchedEffect(latestUser?.photoUri) {
-        latestUser?.photoUri?.let { uriString ->
+    LaunchedEffect(loggedInUser?.photoUri) {
+        loggedInUser?.photoUri?.let { uriString ->
             val uri = Uri.parse(uriString)
             imagePath = getFileMetadata(context, uri)
         }
@@ -53,7 +54,7 @@ fun ProfileScreen(viewModel: UsersViewModel, navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        latestUser?.let {
+            loggedInUser?.let {
             Text(text = "Username: ${it.username}")
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -68,15 +69,19 @@ fun ProfileScreen(viewModel: UsersViewModel, navController: NavController) {
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(text = "Image Path: ${imagePath ?: "Unknown"}")
+                //Text(text = "Image Path: ${imagePath ?: "Unknown"}")
             } ?: Text("No profile picture available")
         } ?: Text("No user data available")
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        Button(onClick = { navController.navigate("products") }) {
-            Text("Go to Main Screen")
-        }
+//        Button(onClick = { navController.navigate("products") }) {
+//            Text("Go to Main Screen")
+//        }
+
+            Button(onClick = { navController.navigate("main") }) {
+                Text("Logout")
+            }
     }}
 }
 

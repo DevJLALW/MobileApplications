@@ -38,11 +38,12 @@ import org.srh.fda.R
 
 
 @Composable
-fun RegisterScreen(viewModel: UsersViewModel, onRegisterComplete: () -> Unit) {
+fun RegisterScreen(viewModel: UsersViewModel, onRegisterComplete: (String) -> Unit) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var message by remember { mutableStateOf("") }
     var photoUri by remember {mutableStateOf<Uri?>(null)}
+    var confirmPassword by remember { mutableStateOf("") }
 
     val context = LocalContext.current
     val photoBitmap by viewModel.photoBitmap.collectAsState()
@@ -102,6 +103,13 @@ fun RegisterScreen(viewModel: UsersViewModel, onRegisterComplete: () -> Unit) {
 
             )
 
+                OutlinedTextField(
+                    value = confirmPassword,
+                    onValueChange = { confirmPassword = it },
+                    label = { Text("Confirm Password") },
+                    visualTransformation = PasswordVisualTransformation()
+                )
+
             Spacer(modifier = Modifier.height(16.dp))
 
 
@@ -133,7 +141,9 @@ fun RegisterScreen(viewModel: UsersViewModel, onRegisterComplete: () -> Unit) {
 
                 Button(onClick = {
                     if (username.isNotEmpty() && password.isNotEmpty()) {
-                        viewModel.checkUsernameExists(username) { exists ->
+                        if (password != confirmPassword) {
+                            Toast.makeText(context, "Password do not match", Toast.LENGTH_SHORT).show()
+                        } else {viewModel.checkUsernameExists(username) { exists ->
                             if (exists) {
                                 Toast.makeText(context, "Username already exists", Toast.LENGTH_SHORT).show()
                             } else {
@@ -145,14 +155,14 @@ fun RegisterScreen(viewModel: UsersViewModel, onRegisterComplete: () -> Unit) {
                                     viewModel.registerUser(username, password, photoBitmap) { success ->
                                         if (success) {
                                             message = "User Registered Successfully"
-                                            onRegisterComplete()
+                                            onRegisterComplete(username)
                                         } else {
                                             message = "Registration Failed"
                                         }
                                     }
                                 }
                             }
-                        }
+                        }}
                     } else {
                         message = "Please fill all fields"
                     }

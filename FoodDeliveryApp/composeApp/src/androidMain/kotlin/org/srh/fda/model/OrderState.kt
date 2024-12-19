@@ -6,6 +6,6 @@ data class OrderState(
 )
 
 val OrderData = OrderState(
-    amount = 5,
-    totalPrice = "€27.45"
+    amount = 0,
+    totalPrice = "€0.0"
 )

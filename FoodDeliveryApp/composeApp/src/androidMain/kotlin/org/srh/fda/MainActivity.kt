@@ -41,11 +41,12 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun OrderPage(navController: NavController, viewModel: UsersViewModel) {
-    var amount by remember { mutableIntStateOf(5) } // Start with default amount
+    var amount by remember { mutableIntStateOf(0) } // Start with default amount
     val totalPrice by remember { derivedStateOf { amount * PRODUCT_PRICE_PER_UNIT } }
 
     // Pass the navController to ProductDetailsScreen
     ProductDetailsScreen(
+        viewModel = viewModel,
         navController = navController, // Passing navController here
         orderState = OrderState(
             amount = amount,

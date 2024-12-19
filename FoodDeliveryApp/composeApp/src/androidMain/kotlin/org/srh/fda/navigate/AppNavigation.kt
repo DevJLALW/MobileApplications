@@ -19,12 +19,12 @@ fun AppNavigation(viewModel: UsersViewModel) {
         }
         composable("login") {
             LoginScreen(viewModel = viewModel, onLoginComplete = {
-                navController.navigate("profile")
+                navController.navigate("products")
             })
         }
         composable("register") {
             RegisterScreen(viewModel = viewModel, onRegisterComplete = {
-                navController.navigate("profile")
+                navController.navigate("products")
             })
         }
         composable("profile") {
@@ -33,6 +33,7 @@ fun AppNavigation(viewModel: UsersViewModel) {
 
         composable("products") {
             ProductDetailsScreen(
+                viewModel = viewModel,
                 onAddItemClicked = {
                     navController.navigate("order_page")
                 },
@@ -68,7 +69,7 @@ fun AppNavigation(viewModel: UsersViewModel) {
         }
 
         composable("checkout") {
-            CheckoutScreen(navController = navController) // Checkout screen
+            CheckoutScreen(viewModel = viewModel,navController = navController) // Checkout screen
         }
         composable("maps") {
             MapScreenDroid(navController = navController)

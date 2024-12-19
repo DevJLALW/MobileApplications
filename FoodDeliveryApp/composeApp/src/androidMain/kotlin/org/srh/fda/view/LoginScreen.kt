@@ -26,7 +26,7 @@ import org.srh.fda.R
 
 
 @Composable
-fun LoginScreen(viewModel: UsersViewModel, onLoginComplete: () -> Unit) {
+fun LoginScreen(viewModel: UsersViewModel, onLoginComplete: (String) -> Unit) {
 
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -69,7 +69,7 @@ fun LoginScreen(viewModel: UsersViewModel, onLoginComplete: () -> Unit) {
                 viewModel.authenticateUser(username, password) { success ->
                     if (success) {
                         loginMessage = "Login Successful"
-                        onLoginComplete()  // Navigate to ProfileScreen
+                        onLoginComplete(username)  // Navigate to ProfileScreen
                     } else {
                         loginMessage = "Invalid Credentials"
                     }

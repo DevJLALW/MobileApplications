@@ -34,6 +34,13 @@ open class UsersViewModel(private val context: Context?) : ViewModel() {
     private val _message = MutableStateFlow("")
     val message: StateFlow<String> = _message
 
+    private val _loggedInUser = MutableStateFlow<Users?>(null)
+    val loggedInUser: StateFlow<Users?> = _loggedInUser
+
+    fun setLoggedInUser(user: Users?) {
+        _loggedInUser.value = user
+    }
+
     fun savePhoto(bitmap: Bitmap) {
         _photoBitmap.value = bitmap
     }
@@ -77,7 +84,12 @@ open class UsersViewModel(private val context: Context?) : ViewModel() {
     open fun authenticateUser(username: String, password: String, callback: (Boolean) -> Unit) {
         viewModelScope.launch {
             val user = usersDao.getUserByUsername(username)
-            callback(user?.password == password)
+            if (user?.password == password) {
+                setLoggedInUser(user) // Set the logged-in user
+                callback(true)
+            } else {
+                callback(false)
+            }
         }
     }
 
@@ -86,6 +98,7 @@ open class UsersViewModel(private val context: Context?) : ViewModel() {
             val photoUri = bitmap?.let { savePhotoToStorage(it)?.toString() }
             val user = Users(username = username, password = password, photoUri = photoUri)
             usersDao.upsert(user)
+            setLoggedInUser(user) // Set the logged-in user
             callback(true) // Indicate success
         }
     }

@@ -4,6 +4,7 @@ package org.srh.fda.view
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.location.Geocoder
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -28,6 +29,7 @@ import org.osmdroid.views.overlay.Marker
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import java.util.Locale
 
 @Composable
 fun MapScreenDroid(navController: NavController) {
@@ -36,6 +38,8 @@ fun MapScreenDroid(navController: NavController) {
     val mapView = remember { MapView(context) }
     val permissionGranted = remember { mutableStateOf(false) }
     val currentLocation = remember { mutableStateOf<GeoPoint?>(null) }
+    val locationName = remember { mutableStateOf<String?>(null) }
+
 
     // Set a custom user agent for OsmDroid
     LaunchedEffect(context) {
@@ -87,6 +91,19 @@ fun MapScreenDroid(navController: NavController) {
                     Log.d("Location", "Current Location: Latitude=$latitude, Longitude=$longitude")
 
                     currentLocation.value = GeoPoint(latitude, longitude)
+
+                    // Perform reverse geocoding
+                    val geocoder = Geocoder(context, Locale.getDefault())
+                    try {
+                        val addresses = geocoder.getFromLocation(latitude, longitude, 1)
+                        if (!addresses.isNullOrEmpty()) {
+                            locationName.value = addresses[0].getAddressLine(0) // Full address
+                            // locationName.value = addresses[0].locality // City
+                            // locationName.value = addresses[0].countryName // Country
+                        }
+                    } catch (e: Exception) {
+                        Log.e("Geocoder", "Failed to get location name: ${e.message}")
+                    }
                     mapView.controller.setZoom(15.0)
                     mapView.controller.setCenter(currentLocation.value)
                 } else {
@@ -147,7 +164,7 @@ fun MapScreenDroid(navController: NavController) {
                         currentLocation.value?.let { location ->
                             navController.previousBackStackEntry
                                 ?.savedStateHandle
-                                ?.set("selectedLocation", "${location.latitude},${location.longitude}")
+                                ?.set("selectedLocation", locationName.value ?: "${location.latitude},${location.longitude}")
                             navController.popBackStack()
                         }
                     },
